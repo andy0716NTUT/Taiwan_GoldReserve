@@ -1,0 +1,16 @@
+# Keep preview deployments scoped to the static demo only.
+.git
+.agents
+.codex
+
+contracts/
+docs/
+frontend/
+*.docx
+README.md
+SKILL.md
+
+node_modules/
+.env
+.env.*
+*.log

@@ -315,31 +315,40 @@
     }
 
     const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+    const account = accounts && accounts[0];
+    if (!account) {
+      throw error("error.walletConnect");
+    }
+
     try {
       await window.ethereum.request({
         method: "wallet_switchEthereumChain",
         params: [{ chainId: SEPOLIA_CHAIN_ID }]
       });
-    } catch (error) {
-      if (error && error.code === 4902) {
-        await window.ethereum.request({
-          method: "wallet_addEthereumChain",
-          params: [
-            {
-              chainId: SEPOLIA_CHAIN_ID,
-              chainName: "Sepolia",
-              nativeCurrency: { name: "Sepolia Ether", symbol: "SEP", decimals: 18 },
-              rpcUrls: ["https://rpc.sepolia.org"],
-              blockExplorerUrls: ["https://sepolia.etherscan.io"]
-            }
-          ]
-        });
+    } catch (chainError) {
+      if (chainError && chainError.code === 4902) {
+        try {
+          await window.ethereum.request({
+            method: "wallet_addEthereumChain",
+            params: [
+              {
+                chainId: SEPOLIA_CHAIN_ID,
+                chainName: "Sepolia",
+                nativeCurrency: { name: "Sepolia Ether", symbol: "SEP", decimals: 18 },
+                rpcUrls: ["https://rpc.sepolia.org"],
+                blockExplorerUrls: ["https://sepolia.etherscan.io"]
+              }
+            ]
+          });
+        } catch (addChainError) {
+          console.warn("Wallet connected, but Sepolia could not be added.", addChainError);
+        }
       } else {
-        throw error;
+        console.warn("Wallet connected, but Sepolia could not be selected.", chainError);
       }
     }
 
-    return accounts[0];
+    return account;
   }
 
   window.GoldReserveCore = {

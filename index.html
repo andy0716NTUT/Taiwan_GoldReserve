@@ -1,212 +1,24 @@
 <!doctype html>
 <html lang="zh-Hant">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>台灣黃金儲備學院</title>
-    <link rel="stylesheet" href="src/css/styles.css" />
+    <meta
+      name="description"
+      content="台灣黃金儲備學院 RWA 教學沙盒，提供黃金克代幣、儲備證明、白名單、發行與贖回流程示範。"
+    />
+    <style>
+      html,
+      body,
+      #root {
+        min-height: 100%;
+        margin: 0;
+      }
+    </style>
   </head>
-  <body data-page="student">
-    <header class="topbar">
-      <a class="brand" href="index.html" data-i18n-aria-label="brand.homeLabel" aria-label="回到台灣黃金儲備學院首頁">
-        <span class="brand-mark">GGT</span>
-        <span>
-          <strong data-i18n="brand.name">台灣黃金儲備學院</strong>
-          <small data-i18n="brand.subtitle.student">RWA 教學沙盒</small>
-        </span>
-      </a>
-      <nav class="nav-links" aria-label="Primary">
-        <a class="active" href="index.html" data-i18n="nav.learning">學習首頁</a>
-        <a href="admin.html" data-i18n="nav.instructor">教師控制台</a>
-      </nav>
-      <label class="language-switcher">
-        <span data-i18n="lang.label">語言</span>
-        <select data-lang-switch aria-label="Language">
-          <option value="zh" data-i18n="lang.zh">繁中</option>
-          <option value="en" data-i18n="lang.en">English</option>
-        </select>
-      </label>
-    </header>
-
-    <main>
-      <section class="hero-shell">
-        <div class="hero-copy">
-          <p class="eyebrow" data-i18n="hero.eyebrow">教學 PoC · 台灣黃金保管 · 可延伸至 Sepolia</p>
-          <h1 data-i18n="hero.title">黃金克代幣</h1>
-          <p data-i18n="hero.copy">用 1 GGT = 1 克黃金的情境，學會真實資產代幣化如何設計儲備、審計、白名單、發行限制與贖回流程。</p>
-          <div class="hero-actions">
-            <button class="primary-action" id="connectWalletButton" type="button" data-i18n="hero.connect">連接 MetaMask</button>
-            <a class="secondary-action" href="admin.html" data-i18n="hero.openConsole">開啟教師控制台</a>
-          </div>
-          <p class="disclaimer" data-i18n="hero.disclaimer">本系統僅供教學展示，不構成投資建議，也不是正式受監理金融商品。</p>
-        </div>
-        <div class="hero-visual" data-i18n-aria-label="hero.visualLabel" aria-label="黃金儲備視覺化">
-          <img src="assets/gold-reserve.svg" data-i18n-alt="hero.visualAlt" alt="黃金條與儲備證明帳本" />
-        </div>
-      </section>
-
-      <section class="status-band" aria-label="Gold reserve status">
-        <article class="metric-card">
-          <span data-i18n="metric.reserve">黃金儲備克數</span>
-          <strong id="reserveGrams">--</strong>
-          <small data-i18n="metric.reserveHint">鏈下審計黃金</small>
-        </article>
-        <article class="metric-card">
-          <span data-i18n="metric.supply">GGT 總發行量</span>
-          <strong id="totalSupply">--</strong>
-          <small data-i18n="metric.supplyHint">鏈上代幣供給</small>
-        </article>
-        <article class="metric-card">
-          <span data-i18n="metric.coverage">儲備覆蓋率</span>
-          <strong id="coverageRatio">--</strong>
-          <small id="coverageStatus">--</small>
-        </article>
-        <article class="metric-card">
-          <span data-i18n="metric.latestProof">最新證明</span>
-          <strong id="proofVersion">--</strong>
-          <small id="latestAuditDate">--</small>
-        </article>
-      </section>
-
-      <section class="layout-two">
-        <div class="panel">
-          <div class="panel-heading">
-            <div>
-              <p class="eyebrow" data-i18n="section.proof">儲備證明</p>
-              <h2 data-i18n="section.chainSplit">鏈上 / 鏈下分工</h2>
-            </div>
-            <span class="status-pill" id="reserveBadge">--</span>
-          </div>
-          <div class="proof-box">
-            <span data-i18n="proof.hashLabel">最新證明雜湊</span>
-            <code id="latestProofHash">--</code>
-          </div>
-          <div class="comparison-bars" aria-label="Reserve and supply comparison">
-            <div>
-              <span data-i18n="bar.reserve">儲備</span>
-              <div class="bar-track"><i id="reserveBar"></i></div>
-            </div>
-            <div>
-              <span data-i18n="bar.supply">發行量</span>
-              <div class="bar-track"><i id="supplyBar"></i></div>
-            </div>
-          </div>
-          <div class="split-list">
-            <div>
-              <h3 data-i18n="proof.onchain">鏈上保存</h3>
-              <ul>
-                <li data-i18n="proof.onchain.1">儲備克數</li>
-                <li data-i18n="proof.onchain.2">總發行量</li>
-                <li data-i18n="proof.onchain.3">最新證明雜湊</li>
-                <li data-i18n="proof.onchain.4">白名單 / 凍結 / 暫停狀態</li>
-              </ul>
-            </div>
-            <div>
-              <h3 data-i18n="proof.offchain">鏈下保存</h3>
-              <ul>
-                <li data-i18n="proof.offchain.1">完整審計報告</li>
-                <li data-i18n="proof.offchain.2">KYC 文件</li>
-                <li data-i18n="proof.offchain.3">保管合約</li>
-                <li data-i18n="proof.offchain.4">贖回與交割文件</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <div class="panel">
-          <div class="panel-heading">
-            <div>
-              <p class="eyebrow" data-i18n="section.missionEyebrow">任務進度</p>
-              <h2 data-i18n="section.mission">課堂任務</h2>
-            </div>
-            <strong id="missionScore">0/6</strong>
-          </div>
-          <ol class="mission-list" id="missionList"></ol>
-        </div>
-      </section>
-
-      <section class="layout-two">
-        <div class="panel">
-          <div class="panel-heading">
-            <div>
-              <p class="eyebrow" data-i18n="section.journeyEyebrow">角色扮演流程</p>
-              <h2 data-i18n="section.journey">RWA 生命週期</h2>
-            </div>
-          </div>
-          <div class="journey" id="journey"></div>
-        </div>
-
-        <div class="panel">
-          <div class="panel-heading">
-            <div>
-              <p class="eyebrow" data-i18n="section.riskEyebrow">合規與風險</p>
-              <h2 data-i18n="section.risk">合規控制面板</h2>
-            </div>
-          </div>
-          <dl class="risk-grid" id="riskGrid"></dl>
-        </div>
-      </section>
-
-      <section class="panel full">
-        <div class="panel-heading">
-          <div>
-            <p class="eyebrow" data-i18n="section.timelineEyebrow">審計歷史</p>
-            <h2 data-i18n="section.timeline">證明更新時間軸</h2>
-          </div>
-        </div>
-        <div class="timeline" id="auditTimeline"></div>
-      </section>
-
-      <section class="layout-two">
-        <div class="panel">
-          <div class="panel-heading">
-            <div>
-              <p class="eyebrow" data-i18n="section.requestEyebrow">請求工作台</p>
-              <h2 data-i18n="section.request">申購 / 贖回練習</h2>
-            </div>
-          </div>
-          <form id="requestForm" class="form-grid">
-            <label>
-              <span data-i18n="request.type">請求類型</span>
-              <select name="type">
-                <option value="subscription" data-i18n="request.subscription">申購</option>
-                <option value="redemption" data-i18n="request.redemption">贖回</option>
-              </select>
-            </label>
-            <label>
-              <span data-i18n="request.wallet">錢包地址</span>
-              <input name="wallet" placeholder="0x..." required />
-            </label>
-            <label>
-              <span data-i18n="request.amount">GGT 數量</span>
-              <input name="amount" type="number" min="1" step="1" value="100" required />
-            </label>
-            <button class="primary-action" type="submit" data-i18n="request.create">建立請求</button>
-          </form>
-          <div class="request-list" id="requestList"></div>
-        </div>
-
-        <div class="panel">
-          <div class="panel-heading">
-            <div>
-              <p class="eyebrow" data-i18n="section.quizEyebrow">學習檢核</p>
-              <h2 data-i18n="section.quiz">5 題學習檢核</h2>
-            </div>
-            <strong id="quizScore">0/5</strong>
-          </div>
-          <div class="quiz" id="quiz"></div>
-        </div>
-      </section>
-    </main>
-
-    <footer class="footer">
-      <span data-i18n="footer.student.left">黃金克代幣 · GGT</span>
-      <span data-i18n="footer.student.right">用於教學展示 RWA 設計、儲備證明、合規控制與贖回流程。</span>
-    </footer>
-
-    <script src="src/js/i18n.js"></script>
-    <script src="src/js/core.js"></script>
-    <script src="src/js/requests.js"></script>
-    <script src="src/js/app.js"></script>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

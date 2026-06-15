@@ -8,11 +8,16 @@ build/
 .next/
 out/
 coverage/
+.vite/
+.vite-temp/
+.turbo/
+*.tsbuildinfo
 
 # Local environment
 .env
 .env.*
 !.env.example
+.vercel/
 
 # Logs
 *.log

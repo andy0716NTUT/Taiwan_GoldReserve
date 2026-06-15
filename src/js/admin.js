@@ -1,6 +1,7 @@
 (function () {
   const core = window.GoldReserveCore;
   const i18n = window.GoldReserveI18n;
+  const TAB_STORAGE_KEY = "tgga.admin.activeTab";
 
   function text(id, value) {
     const node = document.getElementById(id);
@@ -83,6 +84,36 @@
     renderEvents(state);
   }
 
+  function setActiveTab(tabId) {
+    const buttons = Array.from(document.querySelectorAll("[data-tab-target]"));
+    const panels = Array.from(document.querySelectorAll("[data-tab-panel]"));
+    const nextTab = buttons.some((button) => button.dataset.tabTarget === tabId) ? tabId : buttons[0]?.dataset.tabTarget;
+    if (!nextTab) return;
+
+    buttons.forEach((button) => {
+      const selected = button.dataset.tabTarget === nextTab;
+      button.classList.toggle("active", selected);
+      button.setAttribute("aria-selected", String(selected));
+      button.setAttribute("tabindex", selected ? "0" : "-1");
+    });
+    panels.forEach((panel) => {
+      const selected = panel.dataset.tabPanel === nextTab;
+      panel.classList.toggle("active", selected);
+      panel.hidden = !selected;
+    });
+    localStorage.setItem(TAB_STORAGE_KEY, nextTab);
+  }
+
+  function bindTabs() {
+    const buttons = Array.from(document.querySelectorAll("[data-tab-target]"));
+    if (!buttons.length) return;
+
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => setActiveTab(button.dataset.tabTarget));
+    });
+    setActiveTab(localStorage.getItem(TAB_STORAGE_KEY) || buttons[0].dataset.tabTarget);
+  }
+
   function bindForm(id, handler) {
     document.getElementById(id).addEventListener("submit", async (event) => {
       event.preventDefault();
@@ -133,6 +164,7 @@
 
   const state = core.getState();
   fillDefaults(state);
+  bindTabs();
   bindEvents();
   render();
 })();

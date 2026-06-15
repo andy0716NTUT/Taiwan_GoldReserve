@@ -64,6 +64,16 @@
         </article>
       </section>
 
+      <section class="page-tabs" aria-label="Instructor sections">
+        <div class="tab-list" role="tablist">
+          <button class="tab-button active" type="button" role="tab" data-tab-target="issue" data-i18n="tabs.issue">證明 / 發行</button>
+          <button class="tab-button" type="button" role="tab" data-tab-target="controls" data-i18n="tabs.controls">管制</button>
+          <button class="tab-button" type="button" role="tab" data-tab-target="records" data-i18n="tabs.records">紀錄</button>
+        </div>
+      </section>
+
+      <div class="tab-panels">
+        <section class="tab-panel active" data-tab-panel="issue" role="tabpanel">
       <section class="layout-two">
         <div class="panel">
           <div class="panel-heading">
@@ -114,7 +124,9 @@
           <p class="hint" data-i18n="admin.mint.hint">若 totalSupply + amount 超過 reserveGrams，或投資人不在白名單中，發行會失敗。</p>
         </div>
       </section>
+        </section>
 
+        <section class="tab-panel" data-tab-panel="controls" role="tabpanel" hidden>
       <section class="layout-three">
         <div class="panel">
           <div class="panel-heading">
@@ -178,7 +190,9 @@
           <p class="hint" data-i18n="admin.redemption.hint">銷毀代表鏈上代幣已移除；黃金出庫或現金結算仍屬於鏈下流程。</p>
         </div>
       </section>
+        </section>
 
+        <section class="tab-panel" data-tab-panel="records" role="tabpanel" hidden>
       <section class="layout-two">
         <div class="panel">
           <div class="panel-heading">
@@ -200,6 +214,8 @@
           <div class="event-log" id="eventLog"></div>
         </div>
       </section>
+        </section>
+      </div>
     </main>
 
     <footer class="footer">
