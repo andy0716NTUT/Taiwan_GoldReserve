@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>教師控制台 · 台灣黃金儲備學院</title>
+    <link rel="stylesheet" href="src/css/styles.css" />
+  </head>
+  <body data-page="admin">
+    <header class="topbar">
+      <a class="brand" href="index.html" data-i18n-aria-label="brand.homeLabel" aria-label="回到台灣黃金儲備學院首頁">
+        <span class="brand-mark">GGT</span>
+        <span>
+          <strong data-i18n="brand.name">台灣黃金儲備學院</strong>
+          <small data-i18n="brand.subtitle.admin">教師控制台</small>
+        </span>
+      </a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="index.html" data-i18n="nav.learning">學習首頁</a>
+        <a class="active" href="admin.html" data-i18n="nav.instructor">教師控制台</a>
+      </nav>
+      <label class="language-switcher">
+        <span data-i18n="lang.label">語言</span>
+        <select data-lang-switch aria-label="Language">
+          <option value="zh" data-i18n="lang.zh">繁中</option>
+          <option value="en" data-i18n="lang.en">English</option>
+        </select>
+      </label>
+    </header>
+
+    <main>
+      <section class="console-head">
+        <div>
+          <p class="eyebrow" data-i18n="admin.eyebrow">管理者控制台</p>
+          <h1 data-i18n="admin.title">教師任務操作台</h1>
+          <p data-i18n="admin.copy">用本地展示狀態模擬最高管理者、發行方、審計者、保管機構與投資人的鏈上治理流程。</p>
+        </div>
+        <div class="console-actions">
+          <button class="secondary-action" id="connectWalletButton" type="button" data-i18n="admin.connect">連接 MetaMask</button>
+          <button class="danger-action" id="resetButton" type="button" data-i18n="admin.reset">重設 Demo</button>
+        </div>
+      </section>
+
+      <section class="status-band">
+        <article class="metric-card">
+          <span data-i18n="admin.metric.reserve">儲備</span>
+          <strong id="reserveGrams">--</strong>
+          <small data-i18n="admin.metric.reserveUnit">克</small>
+        </article>
+        <article class="metric-card">
+          <span data-i18n="admin.metric.supply">發行量</span>
+          <strong id="totalSupply">--</strong>
+          <small data-i18n="admin.metric.supplyUnit">GGT</small>
+        </article>
+        <article class="metric-card">
+          <span data-i18n="admin.metric.coverage">覆蓋率</span>
+          <strong id="coverageRatio">--</strong>
+          <small id="coverageStatus">--</small>
+        </article>
+        <article class="metric-card">
+          <span data-i18n="admin.metric.state">合約狀態</span>
+          <strong id="pausedStatus">--</strong>
+          <small data-i18n="admin.metric.pauseHint">暫停控制</small>
+        </article>
+      </section>
+
+      <section class="layout-two">
+        <div class="panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow" data-i18n="admin.proof.eyebrow">審計者</p>
+              <h2 data-i18n="admin.proof.title">更新儲備證明</h2>
+            </div>
+          </div>
+          <form id="proofForm" class="form-grid">
+            <label>
+              <span data-i18n="admin.proof.reserve">儲備克數</span>
+              <input name="reserveGrams" type="number" min="0" step="1" required />
+            </label>
+            <label>
+              <span data-i18n="admin.proof.custodian">保管機構</span>
+              <input name="custodian" required />
+            </label>
+            <label>
+              <span data-i18n="admin.proof.date">審計日期</span>
+              <input name="auditDate" type="date" required />
+            </label>
+            <label>
+              <span data-i18n="admin.proof.summary">鏈下報告摘要</span>
+              <textarea name="summary" rows="4" required></textarea>
+            </label>
+            <button class="primary-action" type="submit" data-i18n="admin.proof.submit">產生證明雜湊</button>
+          </form>
+        </div>
+
+        <div class="panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow" data-i18n="admin.mint.eyebrow">發行方</p>
+              <h2 data-i18n="admin.mint.title">依儲備發行</h2>
+            </div>
+          </div>
+          <form id="mintForm" class="form-grid">
+            <label>
+              <span data-i18n="admin.mint.address">投資人地址</span>
+              <input name="address" placeholder="0x..." required />
+            </label>
+            <label>
+              <span data-i18n="admin.mint.amount">GGT 數量</span>
+              <input name="amount" type="number" min="1" step="1" required />
+            </label>
+            <button class="primary-action" type="submit" data-i18n="admin.mint.submit">發行 GGT</button>
+          </form>
+          <p class="hint" data-i18n="admin.mint.hint">若 totalSupply + amount 超過 reserveGrams，或投資人不在白名單中，發行會失敗。</p>
+        </div>
+      </section>
+
+      <section class="layout-three">
+        <div class="panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow" data-i18n="admin.whitelist.eyebrow">合規管理者</p>
+              <h2 data-i18n="admin.whitelist.title">白名單</h2>
+            </div>
+          </div>
+          <form id="whitelistForm" class="form-grid">
+            <label>
+              <span data-i18n="admin.whitelist.address">地址</span>
+              <input name="address" placeholder="0x..." required />
+            </label>
+            <label>
+              <span data-i18n="admin.whitelist.label">KYC 標籤</span>
+              <select name="label">
+                <option value="kyc.taiwanPassed" data-i18n="kyc.taiwanPassed">台灣 KYC 已通過</option>
+                <option value="kyc.studentWallet" data-i18n="kyc.studentWallet">學生展示錢包</option>
+                <option value="kyc.instructorWallet" data-i18n="kyc.instructorWallet">教師錢包</option>
+              </select>
+            </label>
+            <button class="primary-action" type="submit" data-i18n="admin.whitelist.submit">加入白名單</button>
+          </form>
+        </div>
+
+        <div class="panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow" data-i18n="admin.emergency.eyebrow">緊急控制</p>
+              <h2 data-i18n="admin.emergency.title">凍結 / 暫停</h2>
+            </div>
+          </div>
+          <form id="freezeForm" class="form-grid">
+            <label>
+              <span data-i18n="admin.emergency.account">帳戶</span>
+              <input name="address" placeholder="0x..." required />
+            </label>
+            <button class="danger-action" type="submit" data-i18n="admin.emergency.freeze">切換凍結</button>
+          </form>
+          <button class="danger-action full-button" id="pauseButton" type="button" data-i18n="admin.emergency.pause">切換暫停</button>
+        </div>
+
+        <div class="panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow" data-i18n="admin.redemption.eyebrow">贖回</p>
+              <h2 data-i18n="admin.redemption.title">銷毀 GGT</h2>
+            </div>
+          </div>
+          <form id="burnForm" class="form-grid">
+            <label>
+              <span data-i18n="admin.redemption.address">投資人地址</span>
+              <input name="address" placeholder="0x..." required />
+            </label>
+            <label>
+              <span data-i18n="admin.redemption.amount">GGT 數量</span>
+              <input name="amount" type="number" min="1" step="1" required />
+            </label>
+            <button class="primary-action" type="submit" data-i18n="admin.redemption.submit">銷毀並進入贖回</button>
+          </form>
+          <p class="hint" data-i18n="admin.redemption.hint">銷毀代表鏈上代幣已移除；黃金出庫或現金結算仍屬於鏈下流程。</p>
+        </div>
+      </section>
+
+      <section class="layout-two">
+        <div class="panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow" data-i18n="admin.accounts.eyebrow">帳戶</p>
+              <h2 data-i18n="admin.accounts.title">白名單 / 凍結 / 餘額</h2>
+            </div>
+          </div>
+          <div class="account-list" id="accountList"></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow" data-i18n="admin.events.eyebrow">事件紀錄</p>
+              <h2 data-i18n="admin.events.title">管理事件</h2>
+            </div>
+          </div>
+          <div class="event-log" id="eventLog"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span data-i18n="admin.footer.left">最高管理者 · 發行方 · 審計者 · 保管機構 · 投資人</span>
+      <span data-i18n="admin.footer.right">鏈上只保存雜湊與公開控制狀態；敏感文件留在鏈下。</span>
+    </footer>
+
+    <script src="src/js/i18n.js"></script>
+    <script src="src/js/core.js"></script>
+    <script src="src/js/requests.js"></script>
+    <script src="src/js/admin.js"></script>
+  </body>
+</html>
